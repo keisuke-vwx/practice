@@ -16,3 +16,12 @@
 # cat sample_03.txt | php hit_number_game.php
 4
 ```
+
+## メモ
+
+### 使用した関数
+
+- explode()
+- array_intersect()
+- array_diff()
+- array_values()
