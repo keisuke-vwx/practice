@@ -20,8 +20,8 @@ class FTRobot
 	const DIRECT_SOUHT = 2;
 	const DIRECT_WEST  = 3;
 
-	const OPRATION_FORWARD = 'F';
-	const OPRATION_TURN    = 'T';
+	const OPERATION_FORWARD = 'F';
+	const OPERATION_TURN    = 'T';
 
 	private $pos_x = 0;
 	private $pos_y = 0;
@@ -79,13 +79,13 @@ class FTRobot
 	 */
 	private function _exec($operation)
 	{
-		if ($operation == self::OPRATION_FORWARD)
+		if ($operation == self::OPERATION_FORWARD)
 		{
-			$this->_forward($operation);
+			$this->_forward();
 		}
-		else if ($operation == self::OPRATION_TURN)
+		else if ($operation == self::OPERATION_TURN)
 		{
-			$this->_turn($operation);
+			$this->_turn();
 		}
 		else
 		{
@@ -98,7 +98,7 @@ class FTRobot
 	/**
 	 * 今向いている向きに長さ 1 だけ移動
 	 */
-	private function _forward($operation)
+	private function _forward()
 	{
 		$direction = $this->direction;
 		switch ($direction)
@@ -129,7 +129,7 @@ class FTRobot
 	/**
 	 * 時計回りに90度回転
 	 */
-	private function _turn($operation)
+	private function _turn()
 	{
 		$this->direction = ($this->direction + 1) % 4;
 	}
