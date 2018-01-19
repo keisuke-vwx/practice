@@ -4,16 +4,23 @@
 # https://beta.atcoder.jp/contests/arc087/tasks/arc087_b
 #
 
-$stdin = trim(fgets(STDIN)); // 標準入力
+$stdins = array();
 
-$robot = new FTRobot($stdin);
+while (TRUE)
+{
+	$stdin = trim(fgets(STDIN));
+	if ($stdin === '')
+	{
+		$operation_seq = $stdins[0];
+		$destination = explode(' ', $stdins[1]);
 
-// $robot->exec();
-// $pos_x = $robot->get_pos_x();
-// $pos_y = $robot->get_pos_y();
-// echo "($pos_x, $pos_y)\n";
-
-$robot->simulate();
+		$robot = new FTRobot($operation_seq);
+		$result = $robot->simulate($destination[0], $destination[1]);
+		echo ($result) ? "YES\n" : "NO\n";
+		return;
+	}
+	$stdins[] = $stdin;
+}
 
 
 class FTRobot
@@ -28,7 +35,7 @@ class FTRobot
 
 	private $pos_x = 0;
 	private $pos_y = 0;
-	private $direction = 0;
+	private $direction = 1;
 	private $operation_seq;
 
 	private $turn_count = 0;
@@ -66,10 +73,9 @@ class FTRobot
 	}
 
 
-	public function get_position()
+	public function init_direction()
 	{
-		$position = array($this->pos_x, $this->pos_y);
-		return $position;
+		$this->direction = self::DIRECT_EAST;
 	}
 
 
@@ -85,10 +91,10 @@ class FTRobot
 
 		if (!isset($this->turn_pattern_index))
 		{
-			$this->_init_turn_pattern();
+			$this->init_turn_pattern();
 		}
 
-		$this->direction = self::DIRECT_NORTH;
+		$this->init_direction();
 
 		foreach ($operation_arr as $_opr)
 		{
@@ -168,7 +174,7 @@ class FTRobot
 	/**
 	 * 想定される命令列をすべて実行してみる
 	 */
-	public function simulate()
+	public function simulate($dest_x, $dest_y)
 	{
 		$turn_length = mb_substr_count($this->operation_seq, self::OPERATION_TURN);
 		$turn_pattern_max = pow(2, $turn_length);
@@ -176,17 +182,22 @@ class FTRobot
 		for ($i=0; $i < $turn_pattern_max; $i++)
 		{
 			$this->init_position();
-			$this->_init_turn_pattern($i);
+			$this->init_turn_pattern($i);
 			$this->exec();
 
 			$pos_x = $this->get_pos_x();
 			$pos_y = $this->get_pos_y();
 			echo "($pos_x, $pos_y)\n";
+
+			if ($pos_x == $dest_x && $pos_y == $dest_y)
+				return TRUE;
 		}
+
+		return FALSE;
 	}
 
 
-	private function _init_turn_pattern($index = NULL)
+	public function init_turn_pattern($index = NULL)
 	{
 		$this->turn_count = 0;
 
