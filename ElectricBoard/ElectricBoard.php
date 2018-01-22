@@ -26,14 +26,14 @@ class ElectricBoard
 {
 
 	private $number = 1;
-	private $additional = 0;
+	private $additional = 1;
 	private $operation_times = 0;
 
 
 	public function __construct($operation_times, $additional)
 	{
-		$this->_set_additional($additional);
-		$this->_set_operation_times($operation_times);
+		$this->additional = $additional;
+		$this->operation_times = $operation_times;
 	}
 
 
@@ -55,15 +55,9 @@ class ElectricBoard
 	}
 
 
-	private function _set_additional($additional) 
+	private function _init_number()
 	{
-		$this->additional = $additional;
-	}
-
-
-	private function _set_operation_times($operation_times) 
-	{
-		$this->operation_times = $operation_times;
+		$this->number = 1;
 	}
 
 
@@ -78,6 +72,7 @@ class ElectricBoard
 
 	public function exec($operation_bit)
 	{
+		$this->_init_number(); 
 		foreach ($operation_bit as $_bit)
 		{
 			if ($_bit == 0)
@@ -94,13 +89,15 @@ class ElectricBoard
 
 	public function simulate()
 	{
-		$max = $this->operation_times;
+		$simulate_result = array();
 
+		$max = pow(2, $this->operation_times);
 		for ($i=0; $i < $max; $i++)
 		{ 
 			$operation_bit = $this->_get_operation_bit($i);
 			$this->exec($operation_bit);
-			echo $this->number . "\n";
+			$simulate_result[] += $this->number;
 		}
+		echo min($simulate_result) . "\n";
 	}
 }
