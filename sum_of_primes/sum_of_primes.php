@@ -13,7 +13,8 @@ function get_all_primes_below($num)
 {
 	$primes = array(2);
 
-	for ($i=3; $i <= $num; $i++)
+	$root = (int)sqrt($num);
+	for ($i=3; $i <= $root; $i++)
 	{
 		$is_prime = TRUE;
 		foreach ($primes as $p)
