@@ -16,8 +16,14 @@ function get_all_primes_below($num)
 	for ($i=3; $i <= $num; $i++)
 	{
 		$is_prime = TRUE;
+		$root = (int)sqrt($i);
 		foreach ($primes as $p)
 		{
+			if ($p > $root)
+			{
+				break;
+			}
+
 			if ($i % $p == 0)
 			{
 				$is_prime = FALSE;
