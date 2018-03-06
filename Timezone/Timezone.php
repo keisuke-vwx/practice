@@ -4,12 +4,23 @@
 # https://yukicoder.me/problems/no/652
 #
 
-$tz = new Timezone("UTC+12");
-echo $tz->get_time(22, 20) . "\n";
+$stdin = trim(fgets(STDIN)); // 標準入力
+
+$inputs = explode(" ", $stdin);
+
+if (count($inputs) != 3)
+{
+	printf("Inputs error : '%s'", $stdin);
+	exit();
+}
+
+list($input_hour, $input_minute, $input_utc) = $inputs;
+
+$tz = new Timezone($input_utc);
+echo $tz->get_time($input_hour, $input_minute) . "\n";
 
 class Timezone
 {
-
 	const UTC_JP = 9;
 
 	private $_diff_time = 0;
@@ -21,7 +32,6 @@ class Timezone
 			return;
 
 		$this->_diff_time = $this->_get_utc_diff_time($utc);
-		echo $this->_diff_time . "\n";
 	}
 
 
@@ -38,17 +48,31 @@ class Timezone
 
 	private function _get_utc_diff_time($utc)
 	{
-		preg_match("/-?(1[0-4]|[0-9])/", $utc, $matches);
+		preg_match("/-?(1[0-4]|[0-9])(.[0-9])?/", $utc, $matches);
 		return empty($matches[0])
 			? NULL
-			: (int)$matches[0] - self::UTC_JP;
+			: (float)$matches[0] - self::UTC_JP;
 	}
 
 
 	public function get_time($hour, $minute)
 	{
-		$hh = (int)$hour + (int)$this->_diff_time;
-		$mm = (int)$minute;
+		$hh = (float)$hour + (float)$this->_diff_time;
+
+		if ($hh < 0)
+		{
+			$hh = $hh + 24;
+		}
+
+		$_mm = $hh > (int)$hh ? (float)($hh - (int)$hh) : 0;
+		$mm = (int)$minute + (int)($_mm*60);
+
+		if ($mm >= 60)
+		{
+			$hh = $hh + 1;
+			$mm = $mm - 60;
+		}
+
 		return $this->_format_to_time($hh, $mm);
 	}
 
@@ -56,6 +80,6 @@ class Timezone
 	private function _format_to_time($hour, $minute)
 	{
 		$hh = $hour > 24 ? $hour - 24 : $hour;
-		return sprintf("%02d:%02d", $hour, $minute);
+		return sprintf("%02d:%02d", $hh, $minute);
 	}
 }
