@@ -19,6 +19,7 @@ list($input_hour, $input_minute, $input_utc) = $inputs;
 $tz = new Timezone($input_utc);
 echo $tz->get_time($input_hour, $input_minute) . "\n";
 
+
 class Timezone
 {
 	const UTC_JP = 9;
@@ -37,7 +38,7 @@ class Timezone
 
 	private function _check_utc_format($utc)
 	{
-		$is_valid = preg_match("/UTC(\+|-)(1[0-4]|[0-9])/", $utc);
+		$is_valid = preg_match("/^UTC(\+|-)((1[0-3]|[0-9])(.[0-9])?|14)$/", $utc);
 		if (!$is_valid)
 		{
 			printf("UTC format is invalid : '%s'\n", $utc);
@@ -49,7 +50,7 @@ class Timezone
 	private function _get_utc_diff_time($utc)
 	{
 		preg_match("/-?(1[0-4]|[0-9])(.[0-9])?/", $utc, $matches);
-		return empty($matches[0])
+		return !isset($matches[0])
 			? NULL
 			: (float)$matches[0] - self::UTC_JP;
 	}
