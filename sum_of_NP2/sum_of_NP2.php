@@ -47,15 +47,6 @@ function is_pow_of_2($number)
 	{
 		return TRUE;
 	}
-	else
-	{
-		if (is_int($number))
-		{
-			return is_pow_of_2($number/2);
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
+	
+	return is_int($number) ? is_pow_of_2($number/2) : FALSE;
 }
