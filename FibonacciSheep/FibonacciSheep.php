@@ -12,10 +12,10 @@ class FibonacciSheep extends TwoOperations
 
 	private $count;
 	private $miss_count;
+	private $min_miss_count = -1;
 	private $sheep;
 	private $last_sheep;
 	private $sheep_array = array();
-	private $miss_count_array = array();
 
 
 	public function __construct($count, $last_sheep)
@@ -31,8 +31,7 @@ class FibonacciSheep extends TwoOperations
 	protected function on_bit_func()
 	{
 		$sheep = $this->calc_fibonacci_sheep($this->count) - 1;
-		$this->sheep_array[] = $sheep;
-		$this->count++;
+		$this->count_up_sheep($sheep);
 		$this->miss_count++;
 	}
 
@@ -40,8 +39,7 @@ class FibonacciSheep extends TwoOperations
 	protected function off_bit_func()
 	{
 		$sheep = $this->calc_fibonacci_sheep($this->count);
-		$this->sheep_array[] = $sheep;
-		$this->count++;
+		$this->count_up_sheep($sheep);
 	}
 
 
@@ -58,20 +56,32 @@ class FibonacciSheep extends TwoOperations
 	{
 		$this->sheep = end($this->sheep_array);
 		if ($this->sheep == $this->last_sheep)
-			$this->miss_count_array[] = $this->miss_count;
+		{
+			$this->min_miss_count = ($this->min_miss_count < 0)
+				? $this->miss_count
+				: min($this->min_miss_count, $this->miss_count);
+		}
 	}
 
 
-	public function calc_fibonacci_sheep($i)
+	public function count_up_sheep($sheep)
 	{
-		return $this->sheep_array[$i-2] + $this->sheep_array[$i-3];
+		$this->sheep_array[0] = $this->sheep_array[1];
+		$this->sheep_array[1] = $sheep;
+		$this->sheep = $sheep;
+		$this->count++;
 	}
 
-	public function get_miss_count_array()
+
+	public function calc_fibonacci_sheep()
 	{
-		return !empty($this->miss_count_array)
-			? min($this->miss_count_array)
-			: -1;
+		return $this->sheep_array[0] + $this->sheep_array[1];
+	}
+
+
+	public function get_min_miss_count()
+	{
+		return $this->min_miss_count;
 	}
 
 }
@@ -96,4 +106,4 @@ else if (!is_int((int)$argv[1])
 
 $fibo_sheep = new FibonacciSheep($argv[1], $argv[2]);
 $fibo_sheep->exec();
-echo $fibo_sheep->get_miss_count_array() . "\n";
+echo $fibo_sheep->get_min_miss_count() . "\n";
