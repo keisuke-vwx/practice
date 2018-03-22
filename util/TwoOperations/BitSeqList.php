@@ -25,7 +25,7 @@ class BitSeqList
 		for ($i=0; $i < $max; $i++)
 		{ 
 			$_bit_sequence = $this->_get_bit_sequence($i, $length);
-			$operaton_bit_list[] = $_bit_sequence;
+			$bit_sequence_list[] = $_bit_sequence;
 		}
 
 		return $bit_sequence_list;
