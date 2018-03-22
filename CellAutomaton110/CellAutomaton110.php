@@ -41,19 +41,3 @@ class CellAutomaton110
 		return implode($next_list);
 	}
 }
-
-
-if (!isset($argv[1]))
-{
-	echo "missing arg.\n";
-	exit;
-}
-else if (!is_int((int)$argv[1]))
-{
-	echo sprintf("invalid arg :%s, %s\n", $argv[1], $argv[2]);
-	exit;
-}
-
-
-$automaton = new CellAutomaton110($argv[1]);
-echo $automaton->gen_next_list() . "\n";
